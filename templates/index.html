@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="VlogGuard AI – Blur faces from your videos automatically." />
+    <title>VlogGuard AI | Smart Video Privacy</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&display=swap"
+        rel="stylesheet" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
+</head>
+
+<body>
+    <!-- Background orbs -->
+    <div class="bg-orb orb-1"></div>
+    <div class="bg-orb orb-2"></div>
+    <div class="bg-orb orb-3"></div>
+
+    <!-- ── Navbar ────────────────────────────────────────────── -->
+    <nav class="navbar" id="navbar">
+        <div class="nav-logo">
+            <span class="logo-icon">🛡️</span>
+            <span class="logo-text">VlogGuard <span class="accent">AI</span></span>
+        </div>
+        <ul class="nav-links">
+            <li><a href="#how-it-works">How it works</a></li>
+            <li><a href="#upload-section" class="btn-nav">Try Free</a></li>
+        </ul>
+    </nav>
+
+    <!-- ── Hero ──────────────────────────────────────────────── -->
+    <section class="hero">
+        <div class="hero-badge">✨ Privacy-First AI for Creators</div>
+        <h1 class="hero-title">
+            Blur Faces<br /> &amp;<br />
+            <span class="gradient-text">Keep Your Quality.</span>
+        </h1>
+        <p class="hero-subtitle">
+            Upload your vlog video, provide your photo, and VlogGuard AI automatically blurs every bystander's face while keeping <em>you</em> crystal clear.
+        </p>
+        <a href="#upload-section" class="btn-primary hero-cta-btn">
+            <span>Start Processing</span>
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5">
+                <path d="M5 12h14M12 5l7 7-7 7" />
+            </svg>
+        </a>
+
+        <!-- How it works pills -->
+        <div class="how-pills" id="how-it-works">
+            <div class="pill"><span class="pill-num">1</span> Upload video</div>
+            <svg class="pill-arrow" viewBox="0 0 24 24" width="16" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M5 12h14M12 5l7 7-7 7" />
+            </svg>
+            <div class="pill"><span class="pill-num">2</span> Add your photo</div>
+            <svg class="pill-arrow" viewBox="0 0 24 24" width="16" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M5 12h14M12 5l7 7-7 7" />
+            </svg>
+            <div class="pill"><span class="pill-num">3</span> AI processes</div>
+            <svg class="pill-arrow" viewBox="0 0 24 24" width="16" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M5 12h14M12 5l7 7-7 7" />
+            </svg>
+            <div class="pill"><span class="pill-num">4</span> Download result</div>
+        </div>
+    </section>
+
+    <!-- ── Upload Flow ─────────────────────────────────────────── -->
+    <section class="upload-section" id="upload-section">
+
+        <!-- Stepper -->
+        <div class="stepper" id="stepper">
+            <div class="step active" id="st-1">
+                <div class="step-circle">1</div>
+                <span class="step-label">Upload Video</span>
+            </div>
+            <div class="step-line"></div>
+            <div class="step" id="st-2">
+                <div class="step-circle">2</div>
+                <span class="step-label">Your Photo</span>
+            </div>
+            <div class="step-line"></div>
+            <div class="step" id="st-3">
+                <div class="step-circle">3</div>
+                <span class="step-label">Processing</span>
+            </div>
+            <div class="step-line"></div>
+            <div class="step" id="st-4">
+                <div class="step-circle">4</div>
+                <span class="step-label">Result</span>
+            </div>
+        </div>
+
+        <!-- ── Step 1: Video Upload ── -->
+        <div class="flow-step" id="step-video">
+            <div class="step-card">
+                <div class="step-card-header">
+                    <span class="step-icon">🎬</span>
+                    <div>
+                        <h2>Upload Your Video</h2>
+                        <p>MP4, MOV, AVI — <strong>max 100 MB</strong></p>
+                    </div>
+                </div>
+<!--  ,video/webm,video/x-matroska,.mkv -->
+                <div class="drop-zone" id="video-drop">
+                    <input type="file" id="video-input"
+                        accept="video/mp4,video/mov,video/avi,video/webm,video/x-matroska,.mkv" hidden />
+                    <div class="drop-content" id="video-drop-content">
+                        <div class="drop-icon">📁</div>
+                        <p class="drop-main">Drag &amp; drop your video here</p>
+                        <p class="drop-sub">or <button class="browse-btn"
+                                onclick="document.getElementById('video-input').click()">browse files</button></p>
+                        <p class="drop-limit">Maximum file size: <strong>100 MB</strong></p>
+                    </div>
+                    <div class="drop-preview hidden" id="video-preview">
+                        <div class="preview-icon">✅</div>
+                        <p class="preview-name" id="video-name"></p>
+                        <p class="preview-size" id="video-size"></p>
+                        <button class="remove-btn" id="video-remove">✕ Remove</button>
+                    </div>
+                </div>
+
+                <div class="field-error hidden" id="video-error"></div>
+
+                <button class="btn-primary btn-next" id="video-next" disabled>
+                    Continue →
+                </button>
+            </div>
+        </div>
+
+        <!-- ── Step 2: Face Photo Upload ── -->
+        <div class="flow-step hidden" id="step-face">
+            <div class="step-card">
+                <div class="step-card-header">
+                    <span class="step-icon">🤳</span>
+                    <div>
+                        <h2>Upload Your Photos</h2>
+                        <p>Upload <strong>one or more</strong> clear, front-facing photos of <strong>you</strong> — more photos = higher precision</p>
+                    </div>
+                </div>
+
+                <!-- Hidden file input (multiple) -->
+                <input type="file" id="face-input" accept="image/jpeg,image/png,image/webp" multiple hidden />
+
+                <!-- Drop zone (shown when no photos yet) -->
+                <div class="drop-zone" id="face-drop">
+                    <div class="drop-content" id="face-drop-content">
+                        <div class="drop-icon">🧑</div>
+                        <p class="drop-main">Drag &amp; drop your photos here</p>
+                        <p class="drop-sub">or <button class="browse-btn" id="face-browse-btn">browse files</button></p>
+                        <p class="drop-limit">JPG, PNG, WebP — select multiple for better accuracy</p>
+                    </div>
+                </div>
+
+                <!-- Photos grid (shown after at least 1 added) -->
+                <div class="faces-container hidden" id="faces-container">
+                    <div class="faces-header">
+                        <span class="faces-count-badge" id="faces-count">0 photos added</span>
+                        <button class="btn-add-more" id="face-add-more">+ Add more photos</button>
+                    </div>
+                    <div class="faces-grid" id="faces-grid">
+                        <!-- Thumbnails injected by JS -->
+                    </div>
+                </div>
+
+                <div class="field-error hidden" id="face-error"></div>
+
+                <div class="btn-row">
+                    <button class="btn-secondary btn-back" id="face-back">← Back</button>
+                    <button class="btn-primary btn-next" id="face-next" disabled>
+                        Process Video 🚀
+                    </button>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- ── Step 3: Processing ── -->
+        <div class="flow-step hidden" id="step-processing">
+            <div class="step-card processing-card">
+                <div class="pulse-ring">
+                    <div class="pulse-ring-inner">🛡️</div>
+                </div>
+                <h2>Processing Your Video…</h2>
+                <p class="processing-sub">Detecting &amp; blurring faces. This may take a moment.</p>
+                <div class="progress-bar-wrap">
+                    <div class="progress-bar" id="progress-bar"></div>
+                </div>
+                <p class="progress-label" id="progress-label">Uploading…</p>
+            </div>
+        </div>
+
+        <!-- ── Step 4: Result ── -->
+        <div class="flow-step hidden" id="step-result">
+            <div class="step-card result-card">
+                <div class="result-badge">✅ Processing Complete</div>
+                <h2>Your Protected Video</h2>
+                <p class="result-sub">Faces have been blurred. Download your video below.</p><br/>
+                <p class="result-sub">Note: The video will be deleted from our servers in 10 minutes.</p>
+
+                <div class="result-actions">
+                    <a id="download-btn" class="btn-primary" download>
+                        ⬇ Download Processed Video
+                    </a>
+                    <button class="btn-secondary" id="process-another">Process Another</button>
+                </div>
+            </div>
+        </div>
+
+    </section>
+
+    <!-- ── Footer ─────────────────────────────────────────────── -->
+    <footer class="footer">
+        <div class="footer-logo">
+            <span class="logo-icon">🛡️</span>
+            <span class="logo-text">VlogGuard <span class="accent">AI</span></span>
+        </div>
+        <p class="footer-copy">© 2026 VlogGuard AI — Empowering creators with intelligent privacy.</p>
+    </footer>
+
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+
+</html>
