@@ -98,7 +98,7 @@
                     <span class="step-icon">🎬</span>
                     <div>
                         <h2>Upload Your Video</h2>
-                        <p>MP4, MOV, AVI — <strong>max 100 MB</strong></p>
+                        <p>MP4, MOV, AVI — <strong>max {{ max_video_mb }} MB</strong></p>
                     </div>
                 </div>
 <!--  ,video/webm,video/x-matroska,.mkv -->
@@ -110,7 +110,7 @@
                         <p class="drop-main">Drag &amp; drop your video here</p>
                         <p class="drop-sub">or <button class="browse-btn"
                                 onclick="document.getElementById('video-input').click()">browse files</button></p>
-                        <p class="drop-limit">Maximum file size: <strong>100 MB</strong></p>
+                        <p class="drop-limit">Maximum file size: <strong>{{ max_video_mb }} MB</strong></p>
                     </div>
                     <div class="drop-preview hidden" id="video-preview">
                         <div class="preview-icon">✅</div>
