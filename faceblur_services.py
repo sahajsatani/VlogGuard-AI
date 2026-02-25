@@ -2,9 +2,9 @@ from concurrent.futures import ThreadPoolExecutor
 import threading
 import queue
 from collections import deque
-from uniface.detection import RetinaFace
-from uniface.recognition import ArcFace
-from uniface.privacy import BlurFace
+from uniface import RetinaFace
+from uniface import ArcFace
+from uniface import BlurFace
 import numpy as np
 import cv2
 import logging as logger

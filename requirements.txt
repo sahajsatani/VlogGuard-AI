@@ -5,3 +5,4 @@ uniface
 moviepy>=2.0.0
 opencv-python
 dotenv
+gunicorn
