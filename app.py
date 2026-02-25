@@ -5,6 +5,7 @@ import threading
 from flask import Flask, render_template, redirect, url_for, request, jsonify, Response, send_file
 from werkzeug.utils import secure_filename
 import logging
+import threading
 import time
 from faceblur_services import process_raw_video
 from dotenv import load_dotenv
@@ -45,6 +46,10 @@ def _update_job(job_id: str, **kwargs):
     with _jobs_lock:
         _jobs[job_id].update(kwargs)
 
+def _delete_job(job_id: str):
+    time.sleep(60*10)
+    with _jobs_lock:
+        del _jobs[job_id]
 
 def _run_job(job_id: str, video_path: str, face_paths: list, output_path: str, temp_path: str):
     """Background thread: runs processing and updates job state."""
@@ -64,6 +69,13 @@ def _run_job(job_id: str, video_path: str, face_paths: list, output_path: str, t
         else:
             _update_job(job_id, status="done", progress=100,
                         message="Done!", output_path=result)
+        logger.info(f"[job {job_id}] Done!")
+        del_thread = threading.Thread(
+            target=_delete_job,
+            args=(job_id,),
+            daemon=True
+        )
+        del_thread.start()
     except Exception as exc:
         logger.exception(f"[job {job_id}] Failed")
         _update_job(job_id, status="error", error=str(exc))
