@@ -5,13 +5,18 @@ from collections import deque
 from uniface import RetinaFace
 from uniface import ArcFace
 from uniface import BlurFace
+from uniface.model_store import set_cache_dir, get_cache_dir
 import numpy as np
 import cv2
 import logging as logger
 from moviepy import VideoFileClip
 import time
 import os
+import sys
 
+cur_dir = os.path.dirname(os.path.abspath(sys.argv[0]))
+set_cache_dir(cur_dir + "/cache/models")
+logger.info(f"Cache directory set to: {get_cache_dir()}")
 detector = RetinaFace()
 recognizer = ArcFace()
 blurrer = BlurFace(method="pixelate")
@@ -257,26 +262,27 @@ def process_raw_video(
         cap.release()
         out.release()
         logger.info(f"Done → {output_path}")
+        return output_path
+        
+        # original_clip = VideoFileClip(video_path)
+        # processed_clip = VideoFileClip(output_path)
 
-        original_clip = VideoFileClip(video_path)
-        processed_clip = VideoFileClip(output_path)
+        # final_clip = processed_clip.with_audio(original_clip.audio)
+        # final_clip.write_videofile(temp_path, codec='libx264', audio_codec='aac')
 
-        final_clip = processed_clip.with_audio(original_clip.audio)
-        final_clip.write_videofile(temp_path, codec='libx264', audio_codec='aac')
+        # original_clip.close()
+        # processed_clip.close()
+        # final_clip.close()
 
-        original_clip.close()
-        processed_clip.close()
-        final_clip.close()
+        # logger.info(f"Deleting temp files — {temp_path}, {output_path}")
+        # thread_delete = threading.Thread(
+        #     target=_delete_temp_files,
+        #     args=([temp_path, output_path],),
+        #     daemon=True
+        # )
+        # thread_delete.start()
 
-        logger.info(f"Deleting temp files — {temp_path}, {output_path}")
-        thread_delete = threading.Thread(
-            target=_delete_temp_files,
-            args=([temp_path, output_path],),
-            daemon=True
-        )
-        thread_delete.start()
-
-        return temp_path
+        # return temp_path
 
     except Exception as e:
         logger.exception(f"Error processing video: {e}")
