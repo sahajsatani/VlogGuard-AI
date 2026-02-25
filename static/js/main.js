@@ -275,6 +275,14 @@ facesContainer.addEventListener("drop", (e) => {
 
 faceBack.addEventListener("click", () => setStep(1));
 
+// ── Blur Type Selection ──
+document.querySelectorAll(".blur-tile").forEach(tile => {
+    tile.addEventListener("click", () => {
+        document.querySelectorAll(".blur-tile").forEach(t => t.classList.remove("active"));
+        tile.classList.add("active");
+    });
+});
+
 
 // ══════════════════════════════════════════════════════
 // Step 3 – Processing (fetch + fake progress)
@@ -313,6 +321,12 @@ faceNext.addEventListener("click", async () => {
     const form = new FormData();
     form.append("video", videoFile);
     faceFiles.forEach(({ file }) => form.append("reference_faces", file));
+
+    // Get selected blur type
+    const activeBlurTile = document.querySelector(".blur-tile.active");
+    const blurType = activeBlurTile ? activeBlurTile.getAttribute("data-type") : "pixelate";
+    form.append("blur_type", blurType);
+
     const wait = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
     let jobID = null;
