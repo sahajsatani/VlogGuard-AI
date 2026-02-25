@@ -16,7 +16,8 @@ app = Flask(__name__)
 BASE_DIR        = os.path.dirname(os.path.abspath(__file__))
 UPLOAD_DIR      = os.path.join(BASE_DIR, "uploads")
 OUTPUT_DIR      = os.path.join(BASE_DIR, "outputs")
-MAX_VIDEO_BYTES = 100 * 1024 * 1024   # 100 MB
+_video_size_mb  = int(os.getenv("VIDEO_SIZE", 100))   # MB, configurable via VIDEO_SIZE env
+MAX_VIDEO_BYTES = _video_size_mb * 1024 * 1024
 
 ALLOWED_VIDEO = {"mp4", "mov", "avi", "mkv"}
 ALLOWED_IMAGE = {"jpg", "jpeg", "png", "webp"}
@@ -87,9 +88,15 @@ def root():
     return redirect(url_for("home"))
 
 
+@app.route("/config")
+def app_config():
+    """Expose runtime config to the frontend."""
+    return jsonify({"maxVideoMb": _video_size_mb})
+
+
 @app.route("/home")
 def home():
-    return render_template("index.html")
+    return render_template("index.html", max_video_mb=_video_size_mb)
 
 
 @app.route("/process", methods=["POST"])
@@ -108,7 +115,7 @@ def process():
     video_size = video_file.tell()
     video_file.seek(0)
     if video_size > MAX_VIDEO_BYTES:
-        return jsonify({"error": f"Video exceeds 100 MB ({video_size // (1024*1024)} MB uploaded)."}), 400
+        return jsonify({"error": f"Video exceeds {_video_size_mb} MB limit ({video_size // (1024*1024)} MB uploaded)."}), 400
 
     uid        = uuid.uuid4().hex
     video_ext  = secure_filename(video_file.filename).rsplit(".", 1)[1].lower()

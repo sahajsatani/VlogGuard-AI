@@ -1,6 +1,6 @@
 /* ══════════════════════════════════════════════════════
    VlogGuard AI – main.js
-   Handles: drag-and-drop, 100 MB validation, stepper,
+   Handles: drag-and-drop, VIDEO_SIZE env-based validation, stepper,
             fetch to /process, progress bar, result display
    ══════════════════════════════════════════════════════ */
 
@@ -30,7 +30,18 @@ let faceFile = null;
 // ══════════════════════════════════════════════════════
 // Helpers
 // ══════════════════════════════════════════════════════
-const MAX_VIDEO_BYTES = 100 * 1024 * 1024; // 100 MB
+// Loaded from /config at startup — keeps frontend in sync with VIDEO_SIZE env var
+let MAX_VIDEO_BYTES = 100 * 1024 * 1024; // default until /config responds
+let MAX_VIDEO_MB    = 100;
+
+// Bootstrap config from server
+fetch("/config")
+    .then(r => r.json())
+    .then(cfg => {
+        MAX_VIDEO_MB    = cfg.maxVideoMb;
+        MAX_VIDEO_BYTES = MAX_VIDEO_MB * 1024 * 1024;
+    })
+    .catch(() => {}); // keep defaults if /config fails
 
 function formatSize(bytes) {
     if (bytes < 1024) return `${bytes} B`;
@@ -107,7 +118,7 @@ function setVideoFile(file) {
     if (file.size > MAX_VIDEO_BYTES) {
         showError(
             videoError,
-            `❌ File too large: ${formatSize(file.size)}. Maximum allowed is 100 MB.`
+            `❌ File too large: ${formatSize(file.size)}. Maximum allowed is ${MAX_VIDEO_MB} MB.`
         );
         videoDrop.classList.add("error");
         videoDrop.classList.remove("success");
