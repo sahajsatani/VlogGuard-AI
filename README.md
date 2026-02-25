@@ -8,6 +8,7 @@ VlogGuard AI automatically detects and blurs bystanders in your videos while kee
 ## ✨ Key Features
 
 - **🎯 Smart Selective Blurring**: Blurs all faces *except* the creator's.
+- **✨ Selectable Blur Styles**: Choose between Gaussian, Pixelate, Blackout, Elliptical, or Median anonymization.
 - **📸 Multi-Photo Reference**: Upload multiple angles of yourself for high-precision identity matching.
 - **⚡ Async Processing**: Handles long videos in the background with real-time progress tracking.
 - **🔒 Privacy-Focused**: Processed videos are stored temporarily and automatically deleted after 10 minutes.
@@ -60,7 +61,7 @@ Open `http://localhost:8000` in your browser.
 ## 📝 Usage Flow
 
 1. **Step 1: Upload Video** – Select your vlog (MP4, MOV, AVI).
-2. **Step 2: Provide Reference** – Upload 1-3 clear photos of your face.
+2. **Step 2: Setup Protection** – Upload reference photos and **select your preferred blur style** (Gaussian, Pixelate, etc.).
 3. **Step 3: AI Magic** – Watch the real-time progress bar as the AI blurs bystanders.
 4. **Step 4: Download** – Grab your protected video!
 

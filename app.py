@@ -51,7 +51,7 @@ def _delete_job(job_id: str):
     with _jobs_lock:
         del _jobs[job_id]
 
-def _run_job(job_id: str, video_path: str, face_paths: list, output_path: str, temp_path: str):
+def _run_job(job_id: str, video_path: str, face_paths: list, output_path: str, temp_path: str, blur_type: str):
     """Background thread: runs processing and updates job state."""
     _update_job(job_id, status="processing", progress=5, message="Loading face database…")
     try:
@@ -60,6 +60,7 @@ def _run_job(job_id: str, video_path: str, face_paths: list, output_path: str, t
             face_paths,
             output_path,
             temp_path,
+            blur_type=blur_type,
             progress_callback=lambda pct, msg: _update_job(
                 job_id, progress=pct, message=msg
             ),
@@ -142,6 +143,8 @@ def process():
         face_paths.append(fp)
     video_file.save(video_path)
 
+    blur_type = request.form.get("blur_type", "pixelate")
+
     # Register job
     with _jobs_lock:
         _jobs[uid] = {
@@ -155,11 +158,11 @@ def process():
     # Start background thread
     t = threading.Thread(
         target=_run_job,
-        args=(uid, video_path, face_paths, out_path, temp_path),
+        args=(uid, video_path, face_paths, out_path, temp_path, blur_type),
         daemon=True,
     )
     t.start()
-    logger.info(f"[job {uid}] started — video={video_path}, faces={len(face_paths)}")
+    logger.info(f"[job {uid}] started — video={video_path}, faces={len(face_paths)}, blur={blur_type}")
 
     return jsonify({"job_id": uid}), 202
 

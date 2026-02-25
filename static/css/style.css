@@ -401,6 +401,64 @@ body {
 .footer-logo { display:inline-flex;align-items:center;gap:.5rem;font-size:1.1rem;font-weight:700;margin-bottom:.5rem; }
 .footer-copy { color:rgba(148,163,184,.5);font-size:.8rem;margin-top:.3rem; }
 
+/* ── Blur Selector ── */
+.blur-selector-wrap {
+  margin-top: 1.5rem;
+  padding: 1.25rem;
+  background: rgba(255,255,255,0.02);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+}
+.selector-title {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--muted);
+  margin-bottom: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+.blur-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+  gap: 0.8rem;
+}
+.blur-tile {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 0.8rem;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4rem;
+}
+.blur-tile:hover {
+  background: rgba(255,255,255,0.06);
+  transform: translateY(-2px);
+  border-color: rgba(124,58,237,0.3);
+}
+.blur-tile.active {
+  background: rgba(124,58,237,0.1);
+  border-color: var(--accent-1);
+  box-shadow: 0 0 15px rgba(124,58,237,0.2);
+}
+.blur-tile-icon {
+  font-size: 1.5rem;
+  margin-bottom: 0.2rem;
+}
+.blur-tile-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--muted);
+  transition: color 0.25s;
+}
+.blur-tile.active .blur-tile-label {
+  color: var(--text);
+}
+
 /* ══════════════════════════════════════════════════════
    Animations
    ══════════════════════════════════════════════════════ */

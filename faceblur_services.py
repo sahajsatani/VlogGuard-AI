@@ -5,6 +5,7 @@ from collections import deque
 from uniface import RetinaFace
 from uniface import ArcFace
 from uniface import BlurFace
+from uniface import Face
 from uniface.model_store import set_cache_dir, get_cache_dir
 import numpy as np
 import cv2
@@ -19,7 +20,7 @@ set_cache_dir(cur_dir + "/cache/models")
 logger.info(f"Cache directory set to: {get_cache_dir()}")
 detector = RetinaFace()
 recognizer = ArcFace()
-blurrer = BlurFace(method="pixelate")
+# blurrer is initialized locally in process_raw_video to support dynamic styles
 
 
 class FaceDatabase:
@@ -159,8 +160,11 @@ def process_raw_video(
     keyframe_interval: int = 5,      # ↑ = faster but less responsive to new faces
     num_workers: int = 8,            # parallel recognition threads
     progress_callback: callable = None,
+    blur_type: str = "pixelate",
 ) -> str | None:
     try:
+        # Initialize blurrer with selected method
+        blurrer = BlurFace(method=blur_type)
         # ── Build DB ──────────────────────────────────────────────────────────
         db = FaceDatabase()
         for path in face_paths:
@@ -249,6 +253,9 @@ def process_raw_video(
                             small = cv2.resize(roi, (roi.shape[1]//10 or 1, roi.shape[0]//10 or 1))
                             frame[y1:y2, x1:x2] = cv2.resize(small, (roi.shape[1], roi.shape[0]),
                                                                interpolation=cv2.INTER_NEAREST)
+                    # if blur_bboxes:
+                    #     face_objs = [Face(bbox=bbox) for bbox in blur_bboxes]
+                    #     blurrer.anonymize(frame, face_objs, inplace=True)
 
             out.write(frame)
             frame_idx += 1
