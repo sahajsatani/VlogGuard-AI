@@ -145,7 +145,8 @@ def _delete_temp_files(file_paths: list[str]):
     time.sleep(60*10)
     for file in file_paths:
         try:
-            os.remove(file)
+            if os.path.exists(file):
+                os.remove(file)
         except OSError as e:
             e.with_traceback()
             pass
@@ -262,8 +263,7 @@ def process_raw_video(
         cap.release()
         out.release()
         logger.info(f"Done → {output_path}")
-        return output_path
-        
+
         # original_clip = VideoFileClip(video_path)
         # processed_clip = VideoFileClip(output_path)
 
@@ -274,15 +274,16 @@ def process_raw_video(
         # processed_clip.close()
         # final_clip.close()
 
-        # logger.info(f"Deleting temp files — {temp_path}, {output_path}")
-        # thread_delete = threading.Thread(
-        #     target=_delete_temp_files,
-        #     args=([temp_path, output_path],),
-        #     daemon=True
-        # )
-        # thread_delete.start()
+        print(f"Deleting temp files — {temp_path}, {output_path}")
+        thread_delete = threading.Thread(
+            target=_delete_temp_files,
+            args=([temp_path, output_path],),
+            daemon=True
+        )
+        thread_delete.start()
 
         # return temp_path
+        return output_path
 
     except Exception as e:
         logger.exception(f"Error processing video: {e}")
